@@ -65,7 +65,7 @@ impl PositionMapper {
     let mut coon = get_connect();
 
     let positions = coon.exec_batch(
-      r"INSERT IGNORE INTO position_histories_8 (symbol, position_amt, position_side, time, entry_price, un_realized_profit, tra_id, leverage, mark_price)
+      r"INSERT IGNORE INTO position_histories_9 (symbol, position_amt, position_side, time, entry_price, un_realized_profit, tra_id, leverage, mark_price)
       VALUES (:symbol, :position_amt, :position_side, :time, :entry_price, :un_realized_profit, :tra_id, :leverage, :mark_price)",
       position.iter().map(|p| params! {
         "symbol" => &p["symbol"],
