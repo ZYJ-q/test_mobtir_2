@@ -20,8 +20,8 @@
         },
         "futures": {
             "base_url": "https://fapi.binance.com",
-            "api_key": "opn9TnS2LEnO6BLgOxACTZ8dWH78hg4vD22cVdLBTPmCFbnc6lWwBYiiziX9xha6",
-            "secret_key": "Flp3wHgt7jKZecgpuui586LSLeKEkQ0Jvu1nR6fmHYf32FO8VwNx8eLeXqIzKMlT",
+            "api_key": "sIy6uALccS6TZYQf9hJrL0Z3R2R9nKU0Drnh7bqsNAugrHN0cgO2QcYb11QrcMgI",
+            "secret_key": "RaUHaC0GL735GATWiJJt4B9LBdW4ZHZ25e8BuG2Xh1CNBqu2ZtcU8vMeATHrFhNx",
             "init_fund": 500
         }
     },
