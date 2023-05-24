@@ -94,6 +94,7 @@ async fn real_time(
                             } else {
 
                                 for a in 0..value.len() {
+
                                     let mut trade_object: Map<String, Value> = Map::new();
                                     trade_object.insert(String::from("tra_symbol"), Value::from(value[a].as_object().unwrap().get("symbol").unwrap().as_str().unwrap()));
                                     trade_object.insert(
@@ -194,6 +195,18 @@ async fn real_time(
                                                 .unwrap(),
                                         ),
                                     );
+                                    trade_object.insert(
+                                        String::from("tra_order_id"),
+                                        Value::from(
+                                            value[a]
+                                              .as_object()
+                                              .unwrap()
+                                              .get("orderId")
+                                              .unwrap()
+                                              .as_u64()
+                                              .unwrap(),
+                                        ),
+                                    );
                                     let millis = value[a]
                                         .as_object()
                                         .unwrap()
@@ -207,9 +220,10 @@ async fn real_time(
                                     );
                                     // info!("datetime: {}", datetime);
                                     let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+
                                     trade_object.insert(String::from("tra_time"), Value::from(time.clone()));
     
-                                    let year_time = format!("{}", datetime.format("%Y-%m-%d"));
+                                    // let year_time = format!("{}", datetime.format("%Y-%m-%d"));
                                     // match value[i].as_object().unwrap().get("buyer") {
                                     //     Some(buyer) => {
                                     //         trade_object.insert(
@@ -221,7 +235,7 @@ async fn real_time(
                                     //         trade_object.insert(String::from("is_buyer"), Value::Null);
                                     //     }
                                     // }
-                                    println!("时间:{:?}, year_time:{:?}", &time, &year_time);
+                                    // println!("时间:{:?}, year_time:{:?}", &time, &year_time);
                                     match value[a].as_object().unwrap().get("maker") {
                                         Some(maker) => {
                                             trade_object.insert(
