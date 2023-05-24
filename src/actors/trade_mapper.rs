@@ -19,7 +19,7 @@ impl TradeMapper {
     // let query_id = conn.exec_first(, params)
 
     let flag = conn.exec_batch(
-      r"INSERT IGNORE INTO trate_histories_3 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      r"INSERT IGNORE INTO trate_histories_9 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
       VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)",
       trades.iter().map(|p| params! {
         "th_id" => &p["th_id"],
@@ -65,7 +65,7 @@ impl PositionMapper {
     let mut coon = get_connect();
 
     let positions = coon.exec_batch(
-      r"INSERT IGNORE INTO position_histories_9 (symbol, position_amt, position_side, time, entry_price, un_realized_profit, tra_id, leverage, mark_price)
+      r"INSERT IGNORE INTO position_histories_10 (symbol, position_amt, position_side, time, entry_price, un_realized_profit, tra_id, leverage, mark_price)
       VALUES (:symbol, :position_amt, :position_side, :time, :entry_price, :un_realized_profit, :tra_id, :leverage, :mark_price)",
       position.iter().map(|p| params! {
         "symbol" => &p["symbol"],
