@@ -103,6 +103,8 @@ async fn real_time(
             let symbol = format!("{}", symbol);
             if let Some(data) = binance_futures_api.trade_hiostory(&symbol).await {
                 let v: Value = serde_json::from_str(&data).unwrap();
+                println!("历史数据{:?}, 名字{}", v, name);
+
                 match v.as_array() {
                     Some(value) => {
                         if value.len() == 0 {
@@ -285,7 +287,7 @@ async fn real_time(
         }
 
         let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()), name);
-        println!("插入历史交易数据是否成功{},账户名{:?}", res, Vec::from(trade_histories.clone()));
+        println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
 
          
     }
