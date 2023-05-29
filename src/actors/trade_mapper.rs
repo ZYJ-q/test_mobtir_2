@@ -40,7 +40,7 @@ impl TradeMapper {
     } else if name == "xh03_feng3_virtual" {
       value = r"INSERT IGNORE INTO trate_histories_9 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
       VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
-    } else if name == "xh04_20230524_virtua" {
+    } else if name == "xh04_20230524_virtual" {
       value = r"INSERT IGNORE INTO trate_histories_10 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
       VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
     } else {
