@@ -13,14 +13,42 @@ use serde_json::Value;
 
 impl TradeMapper {
   // 插入数据
-  pub fn insert_trade(trades:Vec<Value>) -> bool {
+  pub fn insert_trade(trades:Vec<Value>, name: &str) -> bool {
     // 连接数据库
     let mut conn = get_connect();
     // let query_id = conn.exec_first(, params)
+    let mut value = "";
+
+
+    
+
+    if name == "Angus" {
+      value =r"INSERT IGNORE INTO trate_histories_3 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    } else if name == "trader02" {
+      value = r"INSERT IGNORE INTO trate_histories_4 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    } else if name == "trader04" {
+      value = r"INSERT IGNORE INTO trate_histories_5 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    } else if name == "xh01_feng4_virtual" {
+      value = r"INSERT IGNORE INTO trate_histories_7 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    } else if name == "xh02_b20230524_virtual" {
+      value = r"INSERT IGNORE INTO trate_histories_8 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    } else if name == "xh03_feng3_virtual" {
+      value = r"INSERT IGNORE INTO trate_histories_9 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    } else if name == "xh04_20230524_virtua" {
+      value = r"INSERT IGNORE INTO trate_histories_10 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
+      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)";
+    }
+
+
 
     let flag = conn.exec_batch(
-      r"INSERT IGNORE INTO trate_histories_5 (th_id, tra_symbol, tra_order_id, tra_commision, tra_time, is_maker, position_side, price, qty, quote_qty, realized_pnl, side)
-      VALUES (:th_id, :tra_symbol, :tra_order_id, :tra_commision, :tra_time, :is_maker, :position_side, :price, :qty, :quote_qty, :realized_pnl, :side)",
+      value,
       trades.iter().map(|p| params! {
         "th_id" => &p["th_id"],
         "tra_symbol" => &p["tra_symbol"],
