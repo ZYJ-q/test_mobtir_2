@@ -110,7 +110,7 @@ impl BinanceFuturesApi {
         }
     }
 
-    pub async fn trade_hiostory(&self, symbol: &str, end:&i64, time:&i64) -> Option<String> {
+    pub async fn trade_hiostory(&self, symbol: &str, end:&i64, time_id:&i64) -> Option<String> {
         let mut params: HashMap<String, Value> = HashMap::new();
         params.insert(String::from("symbol"), Value::from(symbol));
 
@@ -123,7 +123,7 @@ impl BinanceFuturesApi {
         let time = Local::now().timestamp_millis();
         let last_time = time - 1000*60*60*24 * end;
         let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(time - 1000*60*60*24 * end).unwrap(), Utc,);
-        let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(last_time - 1000*60*60 * time).unwrap(), Utc,);
+        let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(last_time - 1000*60*60 * time_id).unwrap(), Utc,);
          
         let end_time= format!("{} ", end_datetime.format("%Y-%m-%d %H:%M:%S"));
         let start_time = format!("{} ", start_datetime.format("%Y-%m-%d %H:%M:%S"));
