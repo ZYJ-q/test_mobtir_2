@@ -130,7 +130,7 @@ impl BinanceFuturesApi {
         println!("end时间整点{:?}", end_time);
         println!("start时间整点{}", start_time);
 
-        params.insert(String::from("startTime"), Value::from(time - 1000*60*60*24 * (end+1)));
+        params.insert(String::from("startTime"), Value::from(last_time - 1000*60*60));
         if end != &0 {
             params.insert(String::from("endTime"), Value::from(time - 1000*60*60*24 * end));
         }
