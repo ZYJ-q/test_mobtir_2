@@ -74,7 +74,8 @@ async fn real_time(
 
     // }
 
-
+     
+    let mut end = 6;
     for f_config in binance {
         let mut trade_histories: VecDeque<Value> = VecDeque::new();
         
@@ -98,10 +99,9 @@ async fn real_time(
         );
         let name = binance_config.get("name").unwrap().as_str().unwrap();
         for symbol_v in symbols {
-                
             let symbol = symbol_v.as_str().unwrap();
             let symbol = format!("{}", symbol);
-            if let Some(data) = binance_futures_api.trade_hiostory(&symbol).await {
+            if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end).await {
                 let v: Value = serde_json::from_str(&data).unwrap();
                 // println!("历史数据{:?}, 名字{}", v, name);
 
@@ -290,6 +290,12 @@ async fn real_time(
         println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
 
          
+    }
+
+    if end == 0 {
+        end = 0
+    } else {
+        end -= 1
     }
 
         
