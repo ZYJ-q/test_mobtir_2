@@ -128,7 +128,7 @@ impl BinanceFuturesApi {
         if time_id == &1 {
             end_times = time - 1000*60*60*24 * end;
         } else {
-            end_times = time -1000*60*60*24 * (time_id -1)
+            end_times = time -1000*60*60 * (time_id -1)
         }
 
         
