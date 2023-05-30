@@ -23,6 +23,7 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
+    let mut end = 6;
 
     // 每个品种的上一个trade_id
     let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
@@ -75,7 +76,7 @@ async fn real_time(
     // }
 
      
-    let mut end = 6;
+    
     for f_config in binance {
         let mut trade_histories: VecDeque<Value> = VecDeque::new();
         
