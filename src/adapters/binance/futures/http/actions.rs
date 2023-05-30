@@ -120,8 +120,8 @@ impl BinanceFuturesApi {
 
         let now_time = Utc::now().timestamp_millis();
         params.insert(String::from("timestamp"), Value::from(now_time));
-        let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(now_time - 1000*60*60*24 * end).unwrap(), Utc,);
-        let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(now_time - 1000*60*60*24 * (end +  1)).unwrap(), Utc,);
+        let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(now_time - 1000*60*60*12 * end).unwrap(), Utc,);
+        let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(now_time - 1000*60*60*12 * (end +  1)).unwrap(), Utc,);
          
         let end_time= format!("{} ", end_datetime.format("%Y-%m-%d %H:%M:%S"));
         let start_time = format!("{} ", start_datetime.format("%Y-%m-%d %H:%M:%S"));
