@@ -299,21 +299,23 @@ async fn real_time(
 
     let time = Local::now().timestamp_millis();
         let last_time = time - 1000*60*60*24 * end;
-        if time_id == 25 {
-            time_id = 0;
+        if time_id == 12 {
+            time_id = 1;
             if end != 0 {
                 end -= 1
             } else {
                 end = 0
             }
-        }
-        if last_time < time {
-            time_id += 1
-        } else if last_time == time  {
-            time_id = time_id
         } else {
-            time_id -= 1
+            if last_time < time {
+                time_id += 1
+            } else if last_time == time  {
+                time_id = time_id
+            } else {
+                time_id -= 1
+            }
         }
+        
 
     println!("end{} time_id{}", end, time_id);
 

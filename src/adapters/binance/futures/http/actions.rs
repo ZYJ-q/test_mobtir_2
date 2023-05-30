@@ -122,7 +122,17 @@ impl BinanceFuturesApi {
         params.insert(String::from("timestamp"), Value::from(now_time));
         let time = Local::now().timestamp_millis();
         let last_time = time - 1000*60*60*24 * end;
-        let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(time - 1000*60*60*24 * end).unwrap(), Utc,);
+
+        let mut end_times = 0;
+        
+        if time_id == &1 {
+            end_times = time - 1000*60*60*24 * end;
+        } else {
+            end_times = time -1000*60*60*24 * (time_id -1)
+        }
+
+        
+        let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(end_times).unwrap(), Utc,);
         let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(last_time - 1000*60*60 * time_id).unwrap(), Utc,);
          
         let end_time= format!("{} ", end_datetime.format("%Y-%m-%d %H:%M:%S"));
@@ -130,9 +140,13 @@ impl BinanceFuturesApi {
         println!("end时间整点{:?}", end_time);
         println!("start时间整点{}", start_time);
 
-        params.insert(String::from("startTime"), Value::from(last_time - 1000*60*60));
+        params.insert(String::from("startTime"), Value::from(last_time - 1000*60*60 * time_id));
         if end != &0 {
-            params.insert(String::from("endTime"), Value::from(time - 1000*60*60*24 * end));
+            if time_id == &1 {
+                params.insert(String::from("endTime"), Value::from(time - 1000*60*60*24 * end));
+            } else {
+                params.insert(String::from("endTime"), Value::from(last_time - 1000*60*60 * (time_id -1)));
+            }
         }
 
         let response = self
