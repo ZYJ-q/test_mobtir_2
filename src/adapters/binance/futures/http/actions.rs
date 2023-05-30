@@ -1,4 +1,4 @@
-use chrono::{Utc, DateTime, NaiveDateTime};
+use chrono::{Utc, DateTime, NaiveDateTime, Local};
 use reqwest::Method;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -120,16 +120,17 @@ impl BinanceFuturesApi {
 
         let now_time = Utc::now().timestamp_millis();
         params.insert(String::from("timestamp"), Value::from(now_time));
-        let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(now_time - 1000*60*60*12 * end).unwrap(), Utc,);
-        let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(now_time - 1000*60*60*12 * (end +  1)).unwrap(), Utc,);
+        let time = Local::now().timestamp_millis();
+        let end_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(time - 1000*60*60*2 * end).unwrap(), Utc,);
+        let start_datetime: DateTime<Utc> = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(time - 1000*60*60*2 * (end +  1)).unwrap(), Utc,);
          
         let end_time= format!("{} ", end_datetime.format("%Y-%m-%d %H:%M:%S"));
         let start_time = format!("{} ", start_datetime.format("%Y-%m-%d %H:%M:%S"));
         println!("end时间整点{:?}", end_time);
         println!("start时间整点{}", start_time);
 
-        params.insert(String::from("startTime"), Value::from(now_time - 1000*60*60*24 * (end+1)));
-        params.insert(String::from("endTime"), Value::from(now_time - 1000*60*60*24 * end));
+        params.insert(String::from("startTime"), Value::from(time - 1000*60*60*24 * (end+1)));
+        params.insert(String::from("endTime"), Value::from(time - 1000*60*60*24 * end));
         let response = self
             .client
             .send(Method::GET, "/fapi/v1/userTrades", true, &mut params)
