@@ -103,7 +103,7 @@ async fn real_time(
             let symbol = format!("{}", symbol);
             if let Some(data) = binance_futures_api.trade_hiostory(&symbol).await {
                 let v: Value = serde_json::from_str(&data).unwrap();
-                println!("历史数据{:?}, 名字{}", v, name);
+                // println!("历史数据{:?}, 名字{}", v, name);
 
                 match v.as_array() {
                     Some(value) => {
