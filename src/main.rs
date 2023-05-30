@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::{collections::HashMap, fs, time::Duration};
 
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, NaiveDateTime, Utc, Local};
 use log::{debug, info, warn};
 use serde_json::{Map, Value};
 // use tokio::{sync::broadcast::{self, Receiver}};
@@ -23,7 +23,8 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
-    let mut end = 167;
+    let mut end = 6;
+    let mut time_id = 1;
 
     // 每个品种的上一个trade_id
     let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
@@ -102,7 +103,7 @@ async fn real_time(
         for symbol_v in symbols {
             let symbol = symbol_v.as_str().unwrap();
             let symbol = format!("{}", symbol);
-            if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end).await {
+            if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
                 let v: Value = serde_json::from_str(&data).unwrap();
                 // println!("历史数据{:?}, 名字{}", v, name);
 
@@ -287,19 +288,34 @@ async fn real_time(
             }
         }
 
+        
+
+        
         let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()), name);
         println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
 
          
     }
 
-    if end == 0 {
-        end = 0
-    } else {
-        end -= 1
-    }
+    let time = Local::now().timestamp_millis();
+        let last_time = time - 1000*60*60*24 * end;
+        if time_id == 25 {
+            time_id = 0;
+            if end != 0 {
+                end -= 1
+            } else {
+                end = 0
+            }
+        }
+        if last_time < time {
+            time_id += 1
+        } else if last_time == time  {
+            time_id = time_id
+        } else {
+            time_id -= 1
+        }
 
-    println!("end{}", end);
+    println!("end{} time_id{}", end, time_id);
 
         
 
