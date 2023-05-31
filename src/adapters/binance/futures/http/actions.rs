@@ -128,7 +128,7 @@ impl BinanceFuturesApi {
         if time_id == &1 {
             end_times = time - 1000*60*60*24 * end;
         } else {
-            end_times = last_time -1000*60*60 * (time_id -1)
+            end_times = last_time + 1000*60*60 * (time_id -1)
         }
 
         
@@ -145,7 +145,7 @@ impl BinanceFuturesApi {
             if time_id == &1 {
                 params.insert(String::from("startTime"), Value::from(time - 1000*60*60*24 * end));
             } else {
-                params.insert(String::from("startTime"), Value::from(last_time - 1000*60*60 * (time_id -1)));
+                params.insert(String::from("startTime"), Value::from(last_time + 1000*60*60 * (time_id -1)));
             }
         }
 
