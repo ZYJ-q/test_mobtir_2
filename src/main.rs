@@ -310,9 +310,11 @@ async fn real_time(
             }
         } else {
             if last_times < time && last_time != time {
+                println!("走第一个循环");
                 time_id += 1
             } else if last_time == time && last_times < time {
-                time_id = time_id
+                println!("走第二个循环")
+                // time_id = time_id
             } 
         }
         
