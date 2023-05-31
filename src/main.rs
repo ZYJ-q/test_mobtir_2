@@ -309,13 +309,11 @@ async fn real_time(
                 end = 0
             }
         } else {
-            if last_time < time {
+            if last_times < time && last_time != time {
                 time_id += 1
-            } else if last_time == time  {
+            } else if last_time == time && last_times < time {
                 time_id = time_id
-            } else {
-                time_id -= 1
-            }
+            } 
         }
         
 
