@@ -298,9 +298,7 @@ async fn real_time(
     }
 
     let time = Local::now().timestamp_millis();
-        let last_times = time - 1000*60*60*24 * end;
-        let last_time = last_times + 1000*60*60;
-        println!("time:{}, last_times:{}, last_time:{}", time, last_times, last_time);
+        let last_time = time - 1000*60*60*24 * end;
         if time_id == 24 {
             time_id = 1;
             if end != 0 {
@@ -309,13 +307,13 @@ async fn real_time(
                 end = 0
             }
         } else {
-            if last_times < time && last_time != time {
-                println!("走第一个循环");
+            if last_time < time {
                 time_id += 1
-            } else if last_time == time && last_times < time {
-                println!("走第二个循环")
-                // time_id = time_id
-            } 
+            } else if last_time == time  {
+                time_id = time_id
+            } else {
+                time_id -= 1
+            }
         }
         
 
