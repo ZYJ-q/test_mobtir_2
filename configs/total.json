@@ -89,14 +89,14 @@
         "net_worth": 0.002
     },
     "Symbols": [
+        "BNBUSDT",
+        "BNBBUSD",
         "BTCUSDT",
         "BTCBUSD",
         "ETHUSDT",
         "ETHBUSD",
         "XRPUSDT",
-        "XRPBUSD",
-        "BNBUSDT",
-        "BNBBUSD"
+        "XRPBUSD"
     ],
     "Starts": [
         7,
