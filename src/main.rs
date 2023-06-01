@@ -232,7 +232,7 @@ async fn real_time(
                                     .unwrap()
                                     .get("time")
                                     .unwrap()
-                                    .as_i64()
+                                    .as_u64()
                                     .unwrap();
                                 // let datetime: DateTime<Utc> = DateTime::from_utc(
                                 //     NaiveDateTime::from_timestamp_millis(millis).unwrap(),
@@ -241,7 +241,7 @@ async fn real_time(
                                 // // info!("datetime: {}", datetime);
                                 // let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
 
-                                // println!("时间{}", time);
+                                println!("时间{}", millis);
 
                                 trade_object.insert(String::from("tra_time"), Value::from(millis));
 
