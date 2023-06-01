@@ -234,16 +234,16 @@ async fn real_time(
                                     .unwrap()
                                     .as_i64()
                                     .unwrap();
-                                let datetime: DateTime<Utc> = DateTime::from_utc(
-                                    NaiveDateTime::from_timestamp_millis(millis).unwrap(),
-                                    Utc,
-                                );
-                                // info!("datetime: {}", datetime);
-                                let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+                                // let datetime: DateTime<Utc> = DateTime::from_utc(
+                                //     NaiveDateTime::from_timestamp_millis(millis).unwrap(),
+                                //     Utc,
+                                // );
+                                // // info!("datetime: {}", datetime);
+                                // let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
 
-                                println!("时间{}", time);
+                                // println!("时间{}", time);
 
-                                trade_object.insert(String::from("tra_time"), Value::from(time));
+                                trade_object.insert(String::from("tra_time"), Value::from(millis));
 
                                 // let year_time = format!("{}", datetime.format("%Y-%m-%d"));
                                 // match value[i].as_object().unwrap().get("buyer") {

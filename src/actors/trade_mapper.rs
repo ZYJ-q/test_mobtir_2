@@ -19,6 +19,8 @@ impl TradeMapper {
     // let query_id = conn.exec_first(, params)
     let mut value = "";
 
+    
+
 
     
 
@@ -58,7 +60,7 @@ impl TradeMapper {
         "tra_order_id" => &p["tra_order_id"],
         // "tra_id" => &p["tra_id"],
         "tra_commision" => &p["tra_commision"],
-        "tra_time" => &p["tra_time"],
+        "tra_time" => &p["tra_time"].as_str(),
         "is_maker" => &p["is_maker"].to_string(),
         "position_side" => &p["position_side"],
         "price" => &p["price"],
