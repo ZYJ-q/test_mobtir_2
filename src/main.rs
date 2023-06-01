@@ -239,7 +239,7 @@ async fn real_time(
                                     Utc,
                                 );
                                 // info!("datetime: {}", datetime);
-                                let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+                                let time = format!("{:?}", datetime.format("%Y-%m-%d %H:%M:%S"));
 
                                 println!("时间{}", time.clone());
 
