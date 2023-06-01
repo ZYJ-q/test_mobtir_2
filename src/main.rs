@@ -24,7 +24,7 @@ async fn real_time(
     info!("get ready for real time loop");
     let mut running = false;
     let mut end = 1;
-    let mut time_id = 1;
+    let mut time_id = 12;
 
     // 每个品种的上一个trade_id
     let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
@@ -239,7 +239,7 @@ async fn real_time(
                                     Utc,
                                 );
                                 // info!("datetime: {}", datetime);
-                                let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+                                let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S")).replace("\"", "").replace("\"","");
 
                                 trade_object.insert(String::from("tra_time"), Value::from(time.clone()));
 
