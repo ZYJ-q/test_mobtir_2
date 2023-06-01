@@ -239,7 +239,9 @@ async fn real_time(
                                     Utc,
                                 );
                                 // info!("datetime: {}", datetime);
-                                let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S")).replace("\"", "").replace("\"","");
+                                let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+
+                                println!("时间{}", time.clone());
 
                                 trade_object.insert(String::from("tra_time"), Value::from(time.clone()));
 
