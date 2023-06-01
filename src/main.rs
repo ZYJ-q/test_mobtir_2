@@ -241,9 +241,9 @@ async fn real_time(
                                 // info!("datetime: {}", datetime);
                                 let time = format!("{:?}", datetime.format("%Y-%m-%d %H:%M:%S"));
 
-                                println!("时间{}", time.clone());
+                                println!("时间{}", time);
 
-                                trade_object.insert(String::from("tra_time"), Value::from(time.clone()));
+                                trade_object.insert(String::from("tra_time"), Value::from(time));
 
                                 // let year_time = format!("{}", datetime.format("%Y-%m-%d"));
                                 // match value[i].as_object().unwrap().get("buyer") {
