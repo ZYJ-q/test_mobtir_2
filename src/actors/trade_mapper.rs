@@ -100,17 +100,13 @@ impl TradeMapper {
     // let query_id = conn.exec_first(, params)
     let mut value = "";
 
-    
-
-
-    
 
     if name == "mmteam1" {
-      value =r"INSERT IGNORE INTO bybit_trader_histories (tra_order_id, th_id, time, symbol, side, price, qty, quoteQty, commission, type)
-      VALUES (:tra_order_id, :th_id, :time, :symbol, :side, :price, :qty, :quoteQty, :commission, :type)";
+      value =r"INSERT IGNORE INTO bybit_trader_histories (tra_order_id, th_id, time, symbol, side, price, qty, quote_qty, commission, type)
+      VALUES (:tra_order_id, :th_id, :time, :symbol, :side, :price, :qty, :quote_qty, :commission, :type)";
     } else {
-      value =r"INSERT IGNORE INTO bybit_trader_histories (tra_order_id, th_id, time, symbol, side, price, qty, quoteQty, commission, type)
-      VALUES (:tra_order_id, :th_id, :time, :symbol, :side, :price, :qty, :quoteQty, :commission, :type)";
+      value =r"INSERT IGNORE INTO bybit_trader_histories (tra_order_id, th_id, time, symbol, side, price, qty, quote_qty, commission, type)
+      VALUES (:tra_order_id, :th_id, :time, :symbol, :side, :price, :qty, :quote_qty, :commission, :type)";
     }
 
 
@@ -125,7 +121,7 @@ impl TradeMapper {
         "side" => &p["side"],
         "price" => &p["price"],
         "qty" => &p["qty"],
-        "quoteQty" => &p["quoteQty"],
+        "quote_qty" => &p["quote_qty"],
         "commission" => &p["commission"],
         "type" => &p["type"]
       })

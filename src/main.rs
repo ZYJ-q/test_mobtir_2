@@ -365,7 +365,7 @@ async fn real_time(
                         trade_bybit_object.insert(String::from("side"), Value::from(side));
                         trade_bybit_object.insert(String::from("price"), Value::from(price));
                         trade_bybit_object.insert(String::from("qty"), Value::from(qty));
-                        trade_bybit_object.insert(String::from("quoteQty"), Value::from(quote_qty));
+                        trade_bybit_object.insert(String::from("quote_qty"), Value::from(quote_qty));
                         trade_bybit_object.insert(String::from("commission"), Value::from(commission));
                         trade_bybit_object.insert(String::from("type"), Value::from(category));
 
