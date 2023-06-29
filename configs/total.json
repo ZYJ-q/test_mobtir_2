@@ -67,7 +67,7 @@
                 "secret_key": "wflmQHI8Kr61crs3zhsI8ZX77jhV26aI8GY8vDYS3K5YW4R676SVv2nxeFDr8GW8",
                 "name": "xh04_20230524_virtual",
                 "init_fund": 500
-            },
+            }
         ]
     },
     "ByBit": {
@@ -82,7 +82,7 @@
                 "base_url": "https://api.bybit.com",
                 "api_key": "IOHISNKQGHEMHKIAUC",
                 "secret_key": "BOCBYAWEAUGPJRNGOLYIKHJKEYYUTQHHPJTN",
-                "name": "mmteam1",
+                "name": "mmteam1"
             }
         ]
     },
