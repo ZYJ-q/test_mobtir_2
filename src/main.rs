@@ -6,6 +6,7 @@ use log::{debug, info, warn};
 use serde_json::{Map, Value};
 // use tokio::{sync::broadcast::{self, Receiver}};
 use test_alarm::adapters::binance::futures::http::actions::BinanceFuturesApi;
+use test_alarm::adapters::bybit::futures::http::actions::ByBitFuturesApi;
 use test_alarm::base::ssh::SshClient;
 use test_alarm::base::wxbot::WxbotHttpClient;
 use test_alarm::actors::*;
@@ -14,6 +15,7 @@ use test_alarm::actors::*;
 #[warn(unused_mut, unused_variables, dead_code)]
 async fn real_time(
     binance: &Vec<Value>,
+    bybit: &Vec<Value>,
     // binance_futures_api: BinanceFuturesApi,
     symbols: &Vec<Value>,
     mut ssh_api: SshClient,
@@ -25,6 +27,7 @@ async fn real_time(
     let mut running = false;
     let mut end = 1;
     let mut time_id = 1;
+    let mut time_minut_id = 5;
 
     // 每个品种的上一个trade_id
     let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
@@ -326,6 +329,65 @@ async fn real_time(
         // 成交历史(更新所有)
         info!("trade history");
 
+
+
+        for f_config in bybit {
+            let mut trade_histories: VecDeque<Value> = VecDeque::new();
+            
+            let bybit_config = f_config.as_object().unwrap();
+            let bybit_futures_api=ByBitFuturesApi::new(
+                bybit_config
+                    .get("base_url")
+                    .unwrap()
+                    .as_str()
+                    .unwrap(),
+                    bybit_config
+                    .get("api_key")
+                    .unwrap()
+                    .as_str()
+                    .unwrap(),
+                    bybit_config
+                    .get("secret_key")
+                    .unwrap()
+                    .as_str()
+                    .unwrap(),
+            );
+            let name = bybit_config.get("name").unwrap().as_str().unwrap();
+            let category = "linear";
+                if let Some(data) = bybit_futures_api.get_order_history(category, &end, &time_minut_id).await {
+                    // let v: Value = serde_json::from_str(&data).unwrap();
+                    println!("历史数据{:?}, 名字{}", data, name);
+                }
+    
+            
+    
+            
+            // let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()), name);
+            // println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
+    
+             
+        }
+
+
+        let time = Local::now().timestamp_millis();
+        let last_time = time - 1000*60*60*24 * end;
+        if time_id == 1440 {
+            time_id = 5;
+            if end != 0 {
+                end -= 1
+            } else {
+                end = 0
+            }
+        } else {
+            if last_time < time {
+                time_id += 5
+            } else if last_time == time  {
+                time_id = time_id
+            } else {
+                time_id -= 5
+            }
+        }
+
     
 
             
@@ -383,8 +445,10 @@ async fn main() {
         
         // let mut servers_config = Map::new();
         let binance_config = config.get("Binance").unwrap();
+        let bybit_config = config.get("ByBit").unwrap();
         // let binance_future_config = binance_config.get("futures").unwrap();
         let binance_future_config = binance_config.get("futures").unwrap().as_array().unwrap();
+        let bybit_futures_config = bybit_config.get("futures").unwrap().as_array().unwrap();
         let server_config = config.get("Server").unwrap();
         let symbols = config.get("Symbols").unwrap().as_array().unwrap();
         let key = config.get("Alarm").unwrap().get("webhook").unwrap().as_str().unwrap();
@@ -461,7 +525,7 @@ async fn main() {
 
         
         info!("created http client");
-        real_time(binance_future_config, symbols, ssh_api, wx_robot, 500.0).await;
+        real_time(binance_future_config,bybit_futures_config,  symbols, ssh_api, wx_robot, 500.0).await;
     });
 
     // 开始任务
