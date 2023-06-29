@@ -339,8 +339,8 @@ async fn real_time(
             let name = bybit_config.get("name").unwrap().as_str().unwrap();
             let category = "linear";
                 if let Some(data) = bybit_futures_api.get_order_history(category, &minut_end, &time_minut_id).await {
-                    // let v: Value = serde_json::from_str(&data).unwrap();
-                    println!("历史数据{:?}, 名字{}", data, name);
+                    let v: Value = serde_json::from_str(&data).unwrap();
+                    println!("历史数据{:?}, 名字{}", v, name);
                 }
     
             

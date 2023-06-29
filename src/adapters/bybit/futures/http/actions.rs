@@ -47,7 +47,7 @@ impl ByBitFuturesApi {
         }
     }
 
-    pub async fn get_order_history(&self, category:&str, end:&i64, time_id:&i64) -> Option<Value> {
+    pub async fn get_order_history(&self, category:&str, end:&i64, time_id:&i64) -> Option<String> {
         // let my_currency = String::from(currency.unwrap_or("USDT"));
 
         let mut params: HashMap<String, Value> = HashMap::new();
@@ -92,7 +92,7 @@ impl ByBitFuturesApi {
 
         match res_data {
             Some(data) => {
-                return Some(serde_json::Value::String(data));
+                return Some(data);
             }
             None => {
                 return None;
