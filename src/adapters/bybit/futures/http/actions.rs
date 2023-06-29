@@ -74,8 +74,8 @@ impl ByBitFuturesApi {
          
         let end_time= format!("{} ", end_datetime.format("%Y-%m-%d %H:%M:%S"));
         let start_time = format!("{} ", start_datetime.format("%Y-%m-%d %H:%M:%S"));
-        println!("-------------end------------{:?}", end_time);
-        println!("------------start----------{}", start_time);
+        println!("-------------bybitend------------{:?}", end_time);
+        println!("------------bybitstart----------{}", start_time);
 
         params.insert(String::from("endTime"), Value::from(&end_times + 1000*5*60));
         params.insert(String::from("startTime"), Value::from(end_times));
@@ -88,7 +88,7 @@ impl ByBitFuturesApi {
 
         let res_data = self.client.check_response_data(response);
 
-        println!("历史账户交易信息{:?}", res_data);
+        // println!("历史账户交易信息{:?}", res_data);
 
         match res_data {
             Some(data) => {

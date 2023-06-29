@@ -244,7 +244,7 @@ async fn real_time(
                                 // // info!("datetime: {}", datetime);
                                 // let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
 
-                                println!("时间{}", millis);
+                                // println!("时间{}", millis);
 
                                 trade_object.insert(String::from("tra_time"), Value::from(millis));
 
@@ -322,7 +322,7 @@ async fn real_time(
         }
         
 
-    println!("end{} time_id{}", end, time_id);
+    // println!("end{} time_id{}", end, time_id);
 
         
 
