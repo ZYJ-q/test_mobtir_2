@@ -27,6 +27,7 @@ async fn real_time(
     let mut running = false;
     let mut end = 7;
     let mut time_id = 1;
+    let mut minut_end = 7;
     let mut time_minut_id = 5;
 
     // 每个品种的上一个trade_id
@@ -302,24 +303,7 @@ async fn real_time(
          
     }
 
-    let time = Local::now().timestamp_millis();
-        let last_time = time - 1000*60*60*24 * end;
-        if time_id == 24 {
-            time_id = 1;
-            if end != 0 {
-                end -= 1
-            } else {
-                end = 0
-            }
-        } else {
-            if last_time < time {
-                time_id += 1
-            } else if last_time == time  {
-                time_id = time_id
-            } else {
-                time_id -= 1
-            }
-        }
+   
         
 
     // println!("end{} time_id{}", end, time_id);
@@ -354,7 +338,7 @@ async fn real_time(
             );
             let name = bybit_config.get("name").unwrap().as_str().unwrap();
             let category = "linear";
-                if let Some(data) = bybit_futures_api.get_order_history(category, &end, &time_minut_id).await {
+                if let Some(data) = bybit_futures_api.get_order_history(category, &minut_end, &time_minut_id).await {
                     // let v: Value = serde_json::from_str(&data).unwrap();
                     println!("历史数据{:?}, 名字{}", data, name);
                 }
@@ -371,8 +355,8 @@ async fn real_time(
 
         let time = Local::now().timestamp_millis();
         let last_time = time - 1000*60*60*24 * end;
-        if time_id == 1440 {
-            time_id = 5;
+        if time_id == 24 {
+            time_id = 1;
             if end != 0 {
                 end -= 1
             } else {
@@ -380,11 +364,31 @@ async fn real_time(
             }
         } else {
             if last_time < time {
-                time_id += 5
+                time_id += 1
             } else if last_time == time  {
                 time_id = time_id
             } else {
-                time_id -= 5
+                time_id -= 1
+            }
+        } 
+
+
+        let time_min = Local::now().timestamp_millis();
+        let last_time_min = time_min - 1000*60*60*24 * minut_end;
+        if time_minut_id == 1440 {
+            time_minut_id = 5;
+            if minut_end != 0 {
+                minut_end -= 1
+            } else {
+                minut_end = 0
+            }
+        } else {
+            if last_time_min < time_min {
+                time_minut_id += 5
+            } else if last_time_min == time_min  {
+                time_minut_id = time_minut_id
+            } else {
+                time_minut_id -= 5
             }
         }
 
