@@ -53,22 +53,38 @@
                 "secret_key": "Zn00sJu6TxJLB2ubnuF95dTlmmm9lSmhOfy4K3pY9yn3AkOprr2X5KXALk2ZUEjo",
                 "name": "xh02_b20230524_virtual",
                 "init_fund": 500
-            }
+            },
+            {
+                "base_url": "https://fapi.binance.com",
+                "api_key": "DwMl5Uccvvye6twepkKFkasEqruPc75RCiBygBASSJ8Y5FzkfMENrAjTDmE5j05Q",
+                "secret_key": "R85LPzItJiZJoaQmu20RldxuJc9QPIGwftdQnISYXTC7zPrzF2hbhghdbyZe0KT0",
+                "name": "xh03_feng3_virtual",
+                "init_fund": 500
+            },
+            {
+                "base_url": "https://fapi.binance.com",
+                "api_key": "WloEf7MzreutfaO5Ek2K7aSZpw7GBFSh1Vm4z15pHyRsnCjPJ7Bl7HBjeufXj8WR",
+                "secret_key": "wflmQHI8Kr61crs3zhsI8ZX77jhV26aI8GY8vDYS3K5YW4R676SVv2nxeFDr8GW8",
+                "name": "xh04_20230524_virtual",
+                "init_fund": 500
+            },
         ]
     },
-    "Kucoin": {
+    "ByBit": {
         "spot": {
             "base_url": "https://api.kucoin.com",
             "api_key": "6406fcae95d3540001ae60a0",
             "secret_key": "588af041-b31a-44e5-bb46-1be209ad9692",
             "passphrase": "Test20230307"
         },
-        "futures": {
-            "base_url": "https://api-futures.kucoin.com",
-            "api_key": "640fe732c1185f000117c205",
-            "secret_key": "fbfa4579-328f-4b55-aeac-562eb66f6c24",
-            "passphrase": "Test20230307"
-        }
+        "futures": [
+            {
+                "base_url": "https://api.bybit.com",
+                "api_key": "IOHISNKQGHEMHKIAUC",
+                "secret_key": "BOCBYAWEAUGPJRNGOLYIKHJKEYYUTQHHPJTN",
+                "name": "mmteam1",
+            }
+        ]
     },
     "AccountAlarm": {
         "leverage": 2,

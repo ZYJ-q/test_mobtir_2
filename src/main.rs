@@ -293,8 +293,8 @@ async fn real_time(
         
 
         
-        let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()), name);
-        println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
+        // let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()), name);
+        // println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
 
          
     }
