@@ -371,7 +371,7 @@ async fn real_time(
 
                     }
                     trade_bybit_histories.push_back(Value::from(trade_bybit_object));
-                    // println!("历史数据{:?}, 名字{}", v, name);
+                    println!("历史数据{:?}, 名字{}", Vec::from(trade_bybit_histories.clone()), name);
                 }
     
             
