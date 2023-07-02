@@ -25,7 +25,7 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
-    let mut end = 2;
+    let mut end = 4;
     let mut time_id = 1;
     let mut minut_end = 5;
     let mut time_minut_id = 5;
