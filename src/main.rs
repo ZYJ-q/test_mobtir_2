@@ -5,11 +5,10 @@ use chrono::{DateTime, NaiveDateTime, Utc, Local};
 use log::{debug, info, warn};
 use serde_json::{Map, Value};
 // use tokio::{sync::broadcast::{self, Receiver}};
-use test_alarm::adapters::binance::futures::http::actions::BinanceFuturesApi;
-use test_alarm::adapters::bybit::futures::http::actions::ByBitFuturesApi;
-use test_alarm::base::ssh::SshClient;
-use test_alarm::base::wxbot::WxbotHttpClient;
-use test_alarm::actors::*;
+use insert_trader_binance::adapters::binance::futures::http::actions::BinanceFuturesApi;
+use insert_trader_binance::base::ssh::SshClient;
+use insert_trader_binance::base::wxbot::WxbotHttpClient;
+use insert_trader_binance::actors::*;
 // use test_alarm::models::http_data::*;
 
 #[warn(unused_mut, unused_variables, dead_code)]
