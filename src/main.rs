@@ -24,7 +24,7 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
-    let mut end = 7;
+    let mut end = 3;
     let mut time_id = 1;
 
     // 每个品种的上一个trade_id
