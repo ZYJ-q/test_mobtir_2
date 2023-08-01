@@ -22,7 +22,7 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
-    let mut end = 1;
+    let mut end = 7;
     let mut time_id = 1;
 
     // 每个品种的上一个trade_id
@@ -49,7 +49,7 @@ async fn real_time(
         // json对象
         let mut response: Map<String, Value> = Map::new();
         let mut json_data: Map<String, Value> = Map::new();
-        let mut trade_histories: VecDeque<Value> = VecDeque::new();
+        
         let mut map: Map<String, Value> = Map::new();
         map.insert(String::from("productId"), Value::from("TRADER_001"));
         let now = Utc::now();
@@ -83,8 +83,10 @@ async fn real_time(
     
     for f_config in binance {
         let tra_name = &f_config.name;
+        let mut trade_histories: VecDeque<Value> = VecDeque::new();
          
         if &f_config.tra_venue == "Binance" && &f_config.r#type == "Futures" {
+            
             let binance_futures_api=BinanceFuturesApi::new(
                 "https://fapi.binance.com",
                 &f_config.api_key,
@@ -505,6 +507,9 @@ async fn real_time(
             }
     
         }
+
+        let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()));
+        println!("插入历史交易数据是否成功{}", res);
         
 
         
@@ -520,8 +525,7 @@ async fn real_time(
 
 
 
-    let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()));
-    println!("插入历史交易数据是否成功{}", res);
+    
 
 
         let time = Local::now().timestamp_millis();
