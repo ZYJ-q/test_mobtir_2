@@ -6,6 +6,7 @@ use log::{debug, info, warn};
 use serde_json::{Map, Value};
 // use tokio::{sync::broadcast::{self, Receiver}};
 use insert_trader_binance::adapters::binance::futures::http::actions::BinanceFuturesApi;
+use insert_trader_binance::adapters::binance::papi::http::actions::BinancePapiApi;
 use insert_trader_binance::base::ssh::SshClient;
 use insert_trader_binance::base::wxbot::WxbotHttpClient;
 use insert_trader_binance::actors::*;
@@ -13,9 +14,6 @@ use insert_trader_binance::actors::*;
 
 #[warn(unused_mut, unused_variables, dead_code)]
 async fn real_time(
-    binance: &Vec<Value>,
-    bybit: &Vec<Value>,
-    // binance_futures_api: BinanceFuturesApi,
     symbols: &Vec<Value>,
     mut ssh_api: SshClient,
     wx_robot: WxbotHttpClient,
@@ -24,7 +22,7 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
-    let mut end = 1;
+    let mut end = 7;
     let mut time_id = 1;
 
     // 每个品种的上一个trade_id
@@ -51,6 +49,7 @@ async fn real_time(
         // json对象
         let mut response: Map<String, Value> = Map::new();
         let mut json_data: Map<String, Value> = Map::new();
+        let mut trade_histories: VecDeque<Value> = VecDeque::new();
         let mut map: Map<String, Value> = Map::new();
         map.insert(String::from("productId"), Value::from("TRADER_001"));
         let now = Utc::now();
@@ -77,225 +76,439 @@ async fn real_time(
 
     // }
 
+
+    let binance = trade_mapper::TradeMapper::get_positions().unwrap();
+
      
     
     for f_config in binance {
-        let mut trade_histories: VecDeque<Value> = VecDeque::new();
-        
-        let binance_config = f_config.as_object().unwrap();
-        let binance_futures_api=BinanceFuturesApi::new(
-            binance_config
-                .get("base_url")
-                .unwrap()
-                .as_str()
-                .unwrap(),
-            binance_config
-                .get("api_key")
-                .unwrap()
-                .as_str()
-                .unwrap(),
-            binance_config
-                .get("secret_key")
-                .unwrap()
-                .as_str()
-                .unwrap(),
-        );
-        let name = binance_config.get("name").unwrap().as_str().unwrap();
-        for symbol_v in symbols {
-            let symbol = symbol_v.as_str().unwrap();
-            let symbol = format!("{}", symbol);
-            if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
-                let v: Value = serde_json::from_str(&data).unwrap();
-                // println!("历史数据{:?}, 名字{}", v, name);
+        let tra_name = &f_config.name;
+         
+        if &f_config.tra_venue == "Binance" && &f_config.r#type == "Futures" {
+            let binance_futures_api=BinanceFuturesApi::new(
+                "https://fapi.binance.com",
+                &f_config.api_key,
+                &f_config.secret_key,
+            );
+            let name = f_config.tra_id;
+            for symbol_v in symbols {
+                let symbol = symbol_v.as_str().unwrap();
+                let symbol = format!("{}", symbol);
+                if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
+                    let v: Value = serde_json::from_str(&data).unwrap();
+                    // println!("历史数据{:?}, 名字{}", v, name);
+    
+                    match v.as_array() {
+                        Some(value) => {
+                            if value.len() == 0 {
+                                continue;
+                            } else {
+    
+                                for a in 0..value.len() {
+    
+                                    let mut trade_object: Map<String, Value> = Map::new();
+                                    trade_object.insert(String::from("tra_symbol"), Value::from(value[a].as_object().unwrap().get("symbol").unwrap().as_str().unwrap()));
+                                    trade_object.insert(
+                                        String::from("th_id"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("id")
+                                                .unwrap()
+                                                .as_u64()
+                                                .unwrap(),
+                                        ),
+                                    );
 
-                match v.as_array() {
-                    Some(value) => {
-                        if value.len() == 0 {
-                            continue;
-                        } else {
+                                    trade_object.insert(
+                                        String::from("name"), 
+                                        Value::from(name)
+                                    );
 
-                            for a in 0..value.len() {
 
-                                let mut trade_object: Map<String, Value> = Map::new();
-                                trade_object.insert(String::from("tra_symbol"), Value::from(value[a].as_object().unwrap().get("symbol").unwrap().as_str().unwrap()));
-                                trade_object.insert(
-                                    String::from("th_id"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("id")
-                                            .unwrap()
-                                            .as_u64()
-                                            .unwrap(),
-                                    ),
-                                );
-                                // trade_object
-                                //     .insert(String::from("tra_id"), Value::from(1));
-                                trade_object.insert(
-                                    String::from("side"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("side")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("price"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("price")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("qty"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("qty")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("realized_pnl"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("realizedPnl")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("quote_qty"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("quoteQty")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("position_side"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("positionSide")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("tra_commision"),
-                                    Value::from(
-                                        value[a]
-                                            .as_object()
-                                            .unwrap()
-                                            .get("commission")
-                                            .unwrap()
-                                            .as_str()
-                                            .unwrap(),
-                                    ),
-                                );
-                                trade_object.insert(
-                                    String::from("tra_order_id"),
-                                    Value::from(
-                                        value[a]
-                                          .as_object()
-                                          .unwrap()
-                                          .get("orderId")
-                                          .unwrap()
-                                          .as_u64()
-                                          .unwrap(),
-                                    ),
-                                );
-                                let millis = value[a]
-                                    .as_object()
-                                    .unwrap()
-                                    .get("time")
-                                    .unwrap()
-                                    .as_u64()
-                                    .unwrap();
-                                // let datetime: DateTime<Utc> = DateTime::from_utc(
-                                //     NaiveDateTime::from_timestamp_millis(millis).unwrap(),
-                                //     Utc,
-                                // );
-                                // // info!("datetime: {}", datetime);
-                                // let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
-
-                                // println!("时间{}", millis);
-
-                                trade_object.insert(String::from("tra_time"), Value::from(millis));
-
-                                // let year_time = format!("{}", datetime.format("%Y-%m-%d"));
-                                // match value[i].as_object().unwrap().get("buyer") {
-                                //     Some(buyer) => {
-                                //         trade_object.insert(
-                                //             String::from("is_buyer"),
-                                //             Value::Bool(buyer.as_bool().unwrap()),
-                                //         );
-                                //     }
-                                //     None => {
-                                //         trade_object.insert(String::from("is_buyer"), Value::Null);
-                                //     }
-                                // }
-                                // println!("时间:{:?}, year_time:{:?}", &time, &year_time);
-                                match value[a].as_object().unwrap().get("maker") {
-                                    Some(maker) => {
-                                        trade_object.insert(
-                                            String::from("is_maker"),
-                                            Value::Bool(maker.as_bool().unwrap()),
-                                        );
+                                    trade_object.insert(
+                                        String::from("type"),
+                                        Value::from("Futures"),
+                                    );
+                                    // trade_object
+                                    //     .insert(String::from("tra_id"), Value::from(1));
+                                    trade_object.insert(
+                                        String::from("side"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("side")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("price"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("price")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("qty"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("qty")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("realized_pnl"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("realizedPnl")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("quote_qty"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("quoteQty")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("position_side"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("positionSide")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("tra_commision"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("commission")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("tra_order_id"),
+                                        Value::from(
+                                            value[a]
+                                              .as_object()
+                                              .unwrap()
+                                              .get("orderId")
+                                              .unwrap()
+                                              .as_u64()
+                                              .unwrap(),
+                                        ),
+                                    );
+                                    let millis = value[a]
+                                        .as_object()
+                                        .unwrap()
+                                        .get("time")
+                                        .unwrap()
+                                        .as_u64()
+                                        .unwrap();
+                                    // let datetime: DateTime<Utc> = DateTime::from_utc(
+                                    //     NaiveDateTime::from_timestamp_millis(millis).unwrap(),
+                                    //     Utc,
+                                    // );
+                                    // // info!("datetime: {}", datetime);
+                                    // let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+    
+                                    // println!("时间{}", millis);
+    
+                                    trade_object.insert(String::from("tra_time"), Value::from(millis));
+    
+                                    // let year_time = format!("{}", datetime.format("%Y-%m-%d"));
+                                    // match value[i].as_object().unwrap().get("buyer") {
+                                    //     Some(buyer) => {
+                                    //         trade_object.insert(
+                                    //             String::from("is_buyer"),
+                                    //             Value::Bool(buyer.as_bool().unwrap()),
+                                    //         );
+                                    //     }
+                                    //     None => {
+                                    //         trade_object.insert(String::from("is_buyer"), Value::Null);
+                                    //     }
+                                    // }
+                                    // println!("时间:{:?}, year_time:{:?}", &time, &year_time);
+                                    match value[a].as_object().unwrap().get("maker") {
+                                        Some(maker) => {
+                                            trade_object.insert(
+                                                String::from("is_maker"),
+                                                Value::Bool(maker.as_bool().unwrap()),
+                                            );
+                                        }
+                                        None => {
+                                            trade_object.insert(String::from("is_maker"), Value::Null);
+                                        }
                                     }
-                                    None => {
-                                        trade_object.insert(String::from("is_maker"), Value::Null);
+                                    trade_histories.push_back(Value::from(trade_object));
+    
+                                    
+                                    
+                                    if trade_histories.len() > 1000 {
+                                        trade_histories.pop_front();
                                     }
                                 }
-                                trade_histories.push_back(Value::from(trade_object));
-
                                 
+    
                                 
-                                if trade_histories.len() > 1000 {
-                                    trade_histories.pop_front();
-                                }
                             }
-                            
-
-                            
+    
                         }
-
-                    }
-                    None => {
-                        continue;
+                        None => {
+                            continue;
+                        }
                     }
                 }
             }
+    
         }
 
+
+
+        if &f_config.tra_venue == "Binance" && &f_config.r#type == "Papi" {
+            let binance_papi_api=BinancePapiApi::new(
+                "https://papi.binance.com",
+                &f_config.api_key,
+                &f_config.secret_key,
+            );
+            let name = f_config.tra_id;
+            for symbol_v in symbols {
+                let symbol = symbol_v.as_str().unwrap();
+                let symbol = format!("{}", symbol);
+                if let Some(data) = binance_papi_api.trade_hiostory(&symbol, &end, &time_id).await {
+                    let v: Value = serde_json::from_str(&data).unwrap();
+                    // println!("历史数据{:?}, 名字{}", v, name);
+    
+                    match v.as_array() {
+                        Some(value) => {
+                            if value.len() == 0 {
+                                continue;
+                            } else {
+    
+                                for a in 0..value.len() {
+    
+                                    let mut trade_object: Map<String, Value> = Map::new();
+                                    trade_object.insert(String::from("tra_symbol"), Value::from(value[a].as_object().unwrap().get("symbol").unwrap().as_str().unwrap()));
+                                    trade_object.insert(
+                                        String::from("th_id"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("id")
+                                                .unwrap()
+                                                .as_u64()
+                                                .unwrap(),
+                                        ),
+                                    );
+
+                                    trade_object.insert(
+                                        String::from("name"), 
+                                        Value::from(name)
+                                    );
+
+
+                                    trade_object.insert(
+                                        String::from("type"),
+                                        Value::from("Papi_um"),
+                                    );
+                                    // trade_object
+                                    //     .insert(String::from("tra_id"), Value::from(1));
+                                    trade_object.insert(
+                                        String::from("side"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("side")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("price"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("price")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("qty"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("qty")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("realized_pnl"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("realizedPnl")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("quote_qty"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("quoteQty")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("position_side"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("positionSide")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("tra_commision"),
+                                        Value::from(
+                                            value[a]
+                                                .as_object()
+                                                .unwrap()
+                                                .get("commission")
+                                                .unwrap()
+                                                .as_str()
+                                                .unwrap(),
+                                        ),
+                                    );
+                                    trade_object.insert(
+                                        String::from("tra_order_id"),
+                                        Value::from(
+                                            value[a]
+                                              .as_object()
+                                              .unwrap()
+                                              .get("orderId")
+                                              .unwrap()
+                                              .as_u64()
+                                              .unwrap(),
+                                        ),
+                                    );
+                                    let millis = value[a]
+                                        .as_object()
+                                        .unwrap()
+                                        .get("time")
+                                        .unwrap()
+                                        .as_u64()
+                                        .unwrap();
+                                    // let datetime: DateTime<Utc> = DateTime::from_utc(
+                                    //     NaiveDateTime::from_timestamp_millis(millis).unwrap(),
+                                    //     Utc,
+                                    // );
+                                    // // info!("datetime: {}", datetime);
+                                    // let time = format!("{}", datetime.format("%Y-%m-%d %H:%M:%S"));
+    
+                                    // println!("时间{}", millis);
+    
+                                    trade_object.insert(String::from("tra_time"), Value::from(millis));
+    
+                                    // let year_time = format!("{}", datetime.format("%Y-%m-%d"));
+                                    // match value[i].as_object().unwrap().get("buyer") {
+                                    //     Some(buyer) => {
+                                    //         trade_object.insert(
+                                    //             String::from("is_buyer"),
+                                    //             Value::Bool(buyer.as_bool().unwrap()),
+                                    //         );
+                                    //     }
+                                    //     None => {
+                                    //         trade_object.insert(String::from("is_buyer"), Value::Null);
+                                    //     }
+                                    // }
+                                    // println!("时间:{:?}, year_time:{:?}", &time, &year_time);
+                                    match value[a].as_object().unwrap().get("maker") {
+                                        Some(maker) => {
+                                            trade_object.insert(
+                                                String::from("is_maker"),
+                                                Value::Bool(maker.as_bool().unwrap()),
+                                            );
+                                        }
+                                        None => {
+                                            trade_object.insert(String::from("is_maker"), Value::Null);
+                                        }
+                                    }
+                                    trade_histories.push_back(Value::from(trade_object));
+    
+                                    
+                                    
+                                    if trade_histories.len() > 1000 {
+                                        trade_histories.pop_front();
+                                    }
+                                }
+                                
+    
+                                
+                            }
+    
+                        }
+                        None => {
+                            continue;
+                        }
+                    }
+                }
+            }
+    
+        }
         
 
         
-        let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()), name);
-        println!("插入历史交易数据是否成功{},账户名{:?}", res, name);
+       
 
          
     }
@@ -304,6 +517,11 @@ async fn real_time(
         
 
     // println!("end{} time_id{}", end, time_id);
+
+
+
+    let res = trade_mapper::TradeMapper::insert_trade(Vec::from(trade_histories.clone()));
+    println!("插入历史交易数据是否成功{}", res);
 
 
         let time = Local::now().timestamp_millis();
@@ -482,7 +700,7 @@ async fn main() {
 
         
         info!("created http client");
-        real_time(binance_future_config,bybit_futures_config,  symbols, ssh_api, wx_robot, 500.0).await;
+        real_time(symbols, ssh_api, wx_robot, 500.0).await;
     });
 
     // 开始任务
