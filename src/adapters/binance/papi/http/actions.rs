@@ -140,6 +140,7 @@ impl BinancePapiApi {
     pub async fn trade_hiostory(&self, symbol: &str, end:&i64, time_id:&i64) -> Option<String> {
       let mut params: HashMap<String, Value> = HashMap::new();
       params.insert(String::from("symbol"), Value::from(symbol));
+      params.insert(String::from("limit"), Value::from(1000));
 
       
 
