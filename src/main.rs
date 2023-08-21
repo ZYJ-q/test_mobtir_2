@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 use std::{collections::HashMap, fs, time::Duration};
 
 use chrono::{DateTime, NaiveDateTime, Utc, Local};
-use log::{debug, info, warn};
+use log::{debug, info, warn, error};
 use serde_json::{Map, Value};
 // use tokio::{sync::broadcast::{self, Receiver}};
 use insert_trader_binance::adapters::binance::futures::http::actions::BinanceFuturesApi;
@@ -291,6 +291,9 @@ async fn real_time(
                             continue;
                         }
                     }
+                } else {
+                    error!("Can't get bian_futures {} traders.", name);
+                    continue;
                 }
             }
     
@@ -503,6 +506,9 @@ async fn real_time(
                             continue;
                         }
                     }
+                } else {
+                    error!("Can't get bian_papi {} traders.", name);
+                    continue;
                 }
             }
     
