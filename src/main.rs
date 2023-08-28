@@ -129,6 +129,8 @@ async fn real_time(
                 let symbol = symbol_v.as_str().unwrap();
                 let symbol = format!("{}", symbol);
                 println!("symbol{}", symbol);
+                info!("waiting for next real time task...({})", 3000 * 10);
+                tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                 if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
                     let v: Value = serde_json::from_str(&data).unwrap();
                     // println!("历史数据{:?}, 名字{}", v, name);
@@ -347,6 +349,8 @@ async fn real_time(
             for symbol_v in symbols {
                 let symbol = symbol_v.as_str().unwrap();
                 let symbol = format!("{}", symbol);
+                info!("waiting for next real time task...({})", 3000 * 10);
+                tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                 if let Some(data) = binance_papi_api.trade_hiostory(&symbol, &end, &time_id).await {
                     let v: Value = serde_json::from_str(&data).unwrap();
                     // println!("历史数据{:?}, 名字{}", v, name);
@@ -542,10 +546,8 @@ async fn real_time(
                             continue;
                         }
                     }
-                    tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                 } else {
                     error!("Can't get bian_papi {} traders.", name);
-                    tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                     continue;
                 }
                 
