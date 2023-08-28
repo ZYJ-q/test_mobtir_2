@@ -125,8 +125,8 @@ async fn real_time(
                 &f_config.secret_key,
             );
             let name = f_config.tra_id;
-            for symbol_v in &symbols_histories {
-                let symbol = symbol_v.as_object().unwrap().get("symbol").unwrap().as_str().unwrap();
+            for symbol_v in symbols {
+                let symbol = symbol_v.as_str().unwrap();
                 let symbol = format!("{}", symbol);
                 println!("symbol{}", symbol);
                 if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
@@ -670,14 +670,14 @@ let symb: Value = serde_json::from_str(
         let binance_config = config.get("Binance").unwrap();
         let bybit_config = config.get("ByBit").unwrap();
 
-        let symbols = symb.get("symbols").unwrap().as_array().unwrap();
-        println!("symbols{:?}", symbols);
+        // let symbols = symb.get("symbols").unwrap().as_array().unwrap();
+        // println!("symbols{:?}", symbols);
         
         // let binance_future_config = binance_config.get("futures").unwrap();
         let binance_future_config = binance_config.get("futures").unwrap().as_array().unwrap();
         let bybit_futures_config = bybit_config.get("futures").unwrap().as_array().unwrap();
         let server_config = config.get("Server").unwrap();
-        // let symbols = config.get("Symbols").unwrap().as_array().unwrap();
+        let symbols = config.get("Symbols").unwrap().as_array().unwrap();
         let key = config.get("Alarm").unwrap().get("webhook").unwrap().as_str().unwrap();
         // info!("获取key");
         let mut wxbot = String::from("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=");
