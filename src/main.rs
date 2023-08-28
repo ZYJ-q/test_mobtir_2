@@ -27,7 +27,7 @@ async fn real_time(
 
     // 每个品种的上一个trade_id
     let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
-    let mut trade_histories: VecDeque<Value> = VecDeque::new();
+    let mut symbols_histories: VecDeque<Value> = VecDeque::new();
     for symbol_v in symbols {
         let symbol = String::from(symbol_v.as_str().unwrap());
         let symbol = format!("{}", symbol);
@@ -88,7 +88,15 @@ async fn real_time(
 
     if let Some(data) = binance_futures_api.get_symbols(None).await {
         let v: Value = serde_json::from_str(&data).unwrap();
-        println!("所有币种{}", v);
+        let symbols = v.as_object().unwrap().get("symbols").unwrap().as_array().unwrap();
+
+        for symbol in symbols{
+            let mut symbol_object: Map<String, Value> = Map::new();
+            let sym = symbol.as_object().unwrap().get("symbol").unwrap().as_str().unwrap();
+            symbol_object.insert(String::from("symbol"), Value::from(sym));
+            symbols_histories.push_back(Value::from(symbol_object));
+
+        }
     }
 
 
@@ -112,9 +120,10 @@ async fn real_time(
                 &f_config.secret_key,
             );
             let name = f_config.tra_id;
-            for symbol_v in symbols {
-                let symbol = symbol_v.as_str().unwrap();
+            for symbol_v in &symbols_histories {
+                let symbol = symbol_v.as_object().unwrap().get("symbol").unwrap().as_str().unwrap();
                 let symbol = format!("{}", symbol);
+                println!("symbol{}", symbol);
                 if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
                     let v: Value = serde_json::from_str(&data).unwrap();
                     // println!("历史数据{:?}, 名字{}", v, name);
