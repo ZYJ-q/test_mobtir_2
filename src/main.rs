@@ -324,11 +324,13 @@ async fn real_time(
                             continue;
                         }
                     }
+                    tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                 } else {
                     error!("Can't get bian_futures {} traders.", name);
+                    tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                     continue;
                 }
-                tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
+                
             }
     
         }
@@ -540,11 +542,13 @@ async fn real_time(
                             continue;
                         }
                     }
+                    tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                 } else {
                     error!("Can't get bian_papi {} traders.", name);
+                    tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
                     continue;
                 }
-                tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
+                
             }
     
         }
