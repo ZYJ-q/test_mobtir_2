@@ -182,3 +182,25 @@
 2023-04-24T11:24:29.675558600+08:00 - again
 2023-04-24T11:24:29.675854200+08:00 - account balance
 2023-04-24T11:24:30.011423600+08:00 - trade history
+2023-08-28T10:30:10.330760300+08:00 - 初始化数据线程池------开始-------
+2023-08-28T10:30:38.250943200+08:00 - alarm begin(binance account)
+2023-08-28T10:30:38.251243500+08:00 - wxbot  https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=920aca5f-8420-4757-94ac-e6e3400fcd87
+2023-08-28T10:30:38.252894600+08:00 - preparing...
+2023-08-28T10:31:32.696193+08:00 - alarm begin(binance account)
+2023-08-28T10:31:32.696586100+08:00 - wxbot  https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=920aca5f-8420-4757-94ac-e6e3400fcd87
+2023-08-28T10:31:32.698221200+08:00 - preparing...
+2023-08-28T10:33:03.590048100+08:00 - alarm begin(binance account)
+2023-08-28T10:33:03.590338900+08:00 - wxbot  https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=920aca5f-8420-4757-94ac-e6e3400fcd87
+2023-08-28T10:33:03.591613400+08:00 - preparing...
+2023-08-28T10:33:03.591790700+08:00 - created ssh client
+2023-08-28T10:33:03.592067300+08:00 - created http client
+2023-08-28T10:33:03.592302900+08:00 - get ready for real time loop
+2023-08-28T10:33:03.592586200+08:00 - begin real time loop
+2023-08-28T10:33:03.592776100+08:00 - again
+2023-08-28T10:33:03.593020900+08:00 - server process
+2023-08-28T10:33:04.103662400+08:00 - code status error: 451 Unavailable For Legal Reasons-{
+  "code": 0,
+  "msg": "Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error."
+}
+2023-08-28T10:33:04.103906+08:00 - handle response failed
+2023-08-28T10:33:04.104389600+08:00 - 从链接池获取数据库链接----------开始----------

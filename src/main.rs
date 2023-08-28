@@ -652,6 +652,11 @@ async fn main() {
     )
     .expect("Unable to parse");
 
+let symb: Value = serde_json::from_str(
+    &fs::read_to_string("./configs/symbols.json").expect("Unable to read file"),
+)
+.expect("Unable to parse");
+
     // 任务间通信信道
     // let (send, mut rece) = broadcast::channel(32);
 
@@ -662,6 +667,9 @@ async fn main() {
         // let mut servers_config = Map::new();
         let binance_config = config.get("Binance").unwrap();
         let bybit_config = config.get("ByBit").unwrap();
+
+        let symbol = symb.get("symbols").unwrap().as_array().unwrap();
+        println!("长度{}", symbol.len());
         // let binance_future_config = binance_config.get("futures").unwrap();
         let binance_future_config = binance_config.get("futures").unwrap().as_array().unwrap();
         let bybit_futures_config = bybit_config.get("futures").unwrap().as_array().unwrap();
