@@ -27,6 +27,7 @@ async fn real_time(
 
     // 每个品种的上一个trade_id
     let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
+    let mut trade_histories: VecDeque<Value> = VecDeque::new();
     for symbol_v in symbols {
         let symbol = String::from(symbol_v.as_str().unwrap());
         let symbol = format!("{}", symbol);
@@ -78,6 +79,24 @@ async fn real_time(
 
 
     let binance = trade_mapper::TradeMapper::get_positions().unwrap();
+
+    let binance_futures_api=BinanceFuturesApi::new(
+        "https://fapi.binance.com",
+        &binance[0].api_key,
+        &binance[0].secret_key,
+    );
+
+    if let Some(data) = binance_futures_api.get_symbols(None).await {
+        let v: Value = serde_json::from_str(&data).unwrap();
+        println!("所有币种{}", v);
+    }
+
+
+
+
+
+
+    
 
      
     

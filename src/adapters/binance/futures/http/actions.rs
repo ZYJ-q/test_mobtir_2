@@ -79,6 +79,38 @@ impl BinanceFuturesApi {
         }
     }
 
+
+    pub async fn get_symbols(&self, recv_window: Option<u8>) -> Option<String> {
+        let mut params: HashMap<String, Value> = HashMap::new();
+        match recv_window {
+            Some(recvwindow) => {
+                params.insert(
+                    String::from("recvWindow"),
+                    recvwindow.to_string().parse().unwrap(),
+                );
+            }
+            None => {}
+        }
+        let now_time = Utc::now().timestamp_millis();
+        params.insert(String::from("timestamp"), Value::from(now_time));
+
+        let response = self
+            .client
+            .send(Method::GET, "/fapi/v1/exchangeInfo", true, &mut params)
+            .await;
+
+        let res_data = self.client.check_response_data(response);
+
+        match res_data {
+            Some(data) => {
+                return Some(data);
+            }
+            None => {
+                return None;
+            }
+        }
+    }
+
     pub async fn position_risk(&self, symbol: Option<&str>) -> Option<String> {
         let mut params: HashMap<String, Value> = HashMap::new();
         match symbol {
