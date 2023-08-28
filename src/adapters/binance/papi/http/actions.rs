@@ -148,7 +148,10 @@ impl BinancePapiApi {
 
       let now_time = Utc::now().timestamp_millis();
       params.insert(String::from("timestamp"), Value::from(now_time));
-      let time = Local::now().timestamp_millis();
+      let times = Local::now().format("%Y-%m-%d %H:00:00").to_string();
+        let date_time: NaiveDateTime = NaiveDateTime::parse_from_str(&times, "%Y-%m-%d %H:%M:%S").unwrap();
+        let time = date_time.timestamp();
+    //   let time = Local::now().timestamp_millis();
       let last_time = time - 1000*60*60*24 * end;
 
       let mut end_times = 0;
