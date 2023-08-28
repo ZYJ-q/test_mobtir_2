@@ -50,6 +50,8 @@ async fn real_time(
         // json对象
         let mut response: Map<String, Value> = Map::new();
         let mut json_data: Map<String, Value> = Map::new();
+
+        println!("长度{}", symbols.len());
         
         let mut map: Map<String, Value> = Map::new();
         map.insert(String::from("productId"), Value::from("TRADER_001"));
@@ -668,13 +670,14 @@ let symb: Value = serde_json::from_str(
         let binance_config = config.get("Binance").unwrap();
         let bybit_config = config.get("ByBit").unwrap();
 
-        let symbol = symb.get("symbols").unwrap().as_array().unwrap();
-        println!("长度{}", symbol.len());
+        let symbols = symb.get("symbols").unwrap().as_array().unwrap();
+        println!("symbols{:?}", symbols);
+        
         // let binance_future_config = binance_config.get("futures").unwrap();
         let binance_future_config = binance_config.get("futures").unwrap().as_array().unwrap();
         let bybit_futures_config = bybit_config.get("futures").unwrap().as_array().unwrap();
         let server_config = config.get("Server").unwrap();
-        let symbols = config.get("Symbols").unwrap().as_array().unwrap();
+        // let symbols = config.get("Symbols").unwrap().as_array().unwrap();
         let key = config.get("Alarm").unwrap().get("webhook").unwrap().as_str().unwrap();
         // info!("获取key");
         let mut wxbot = String::from("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=");
