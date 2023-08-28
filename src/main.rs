@@ -100,6 +100,9 @@ async fn real_time(
     }
 
 
+    println!("symbol长度{}", symbols_histories.len());
+
+
 
 
 
