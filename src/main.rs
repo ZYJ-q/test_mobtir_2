@@ -26,13 +26,13 @@ async fn real_time(
     let mut time_id = 1;
 
     // 每个品种的上一个trade_id
-    let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
+    // let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
     let mut symbols_histories: VecDeque<Value> = VecDeque::new();
-    for symbol_v in symbols {
-        let symbol = String::from(symbol_v.as_str().unwrap());
-        let symbol = format!("{}", symbol);
-        last_trade_ids.insert(symbol, 0);
-    }
+    // for symbol_v in symbols {
+    //     let symbol = String::from(symbol_v.as_str().unwrap());
+    //     let symbol = format!("{}", symbol);
+    //     last_trade_ids.insert(symbol, 0);
+    // }
 
     // 交易历史
     
