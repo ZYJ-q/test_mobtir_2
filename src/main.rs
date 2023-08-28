@@ -328,6 +328,7 @@ async fn real_time(
                     error!("Can't get bian_futures {} traders.", name);
                     continue;
                 }
+                tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
             }
     
         }
@@ -543,6 +544,7 @@ async fn real_time(
                     error!("Can't get bian_papi {} traders.", name);
                     continue;
                 }
+                tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
             }
     
         }
@@ -627,8 +629,8 @@ async fn real_time(
         // print!("输出的净值数据信息{}", net_worth_res);
 
         // 等待下次执行
-        info!("waiting for next real time task...({})", 6000 * 10);
-        tokio::time::delay_for(Duration::from_millis(6000 * 10)).await;
+        info!("waiting for next real time task...({})", 3000 * 10);
+        tokio::time::delay_for(Duration::from_millis(3000 * 10)).await;
     }
 }
 
