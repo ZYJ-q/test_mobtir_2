@@ -157,7 +157,10 @@ impl BinanceFuturesApi {
         let date_time: NaiveDateTime = NaiveDateTime::parse_from_str(&times, "%Y-%m-%d %H:%M:%S").unwrap();
         let time = date_time.timestamp_millis();
         // let time = Local::now().timestamp_millis();
-        let last_time = time - 1000*60*60*24 * end;
+        // let last_time = time - 1000*60*60*24 * end;
+        println!("action_time{}", time);
+      let last_time = time - 1000*60*60*24 * end;
+      println!("action_last_time{}", last_time);
 
         let mut end_times = 0;
         
