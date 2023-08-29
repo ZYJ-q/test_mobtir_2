@@ -578,7 +578,9 @@ async fn real_time(
     let times = Local::now().format("%Y-%m-%d %H:00:00").to_string();
     let date_time: NaiveDateTime = NaiveDateTime::parse_from_str(&times, "%Y-%m-%d %H:%M:%S").unwrap();
     let time = date_time.timestamp_millis();
+    println!("time{}", time);
         let last_time = time - 1000*60*60*24 * end;
+        println!("last_time{}", last_time);
         if time_id == 24 {
             time_id = 1;
             if end != 0 {
