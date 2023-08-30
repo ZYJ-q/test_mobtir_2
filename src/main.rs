@@ -22,7 +22,7 @@ async fn real_time(
     //rece: &mut Receiver<&str>){
     info!("get ready for real time loop");
     let mut running = false;
-    let mut end = 1;
+    let mut end = 0;
     let mut time_id = 1;
 
     // 每个品种的上一个trade_id
@@ -637,8 +637,8 @@ async fn real_time(
         // print!("输出的净值数据信息{}", net_worth_res);
 
         // 等待下次执行
-        info!("waiting for next real time task...({})", 3000 * 10);
-        tokio::time::delay_for(Duration::from_millis(3000 * 10)).await;
+        info!("waiting for next real time task...({})", 400 * 10);
+        tokio::time::delay_for(Duration::from_millis(400 * 10)).await;
     }
 }
 
