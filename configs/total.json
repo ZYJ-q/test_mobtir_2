@@ -77,6 +77,12 @@
         "net_worth": 0.002
     },
     "Symbols": [
+        "BTCUSDT",
+        "BTCBUSD",
+        "BNBUSDT",
+        "BNBBUSD",
+        "ETHUSDT",
+        "ETHBUSD",
         "HOOKUSDT",
         "WAVESUSDT",
         "SEIUSDT",
@@ -95,12 +101,6 @@
         "LEVERUSDT",
         "DUSKUSDT",
         "CTSIUSDT",
-        "BNBUSDT",
-        "BNBBUSD",
-        "BTCUSDT",
-        "BTCBUSD",
-        "ETHUSDT",
-        "ETHBUSD",
         "XRPUSDT",
         "XRPBUSD"
     ],
