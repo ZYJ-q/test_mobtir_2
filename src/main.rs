@@ -23,7 +23,7 @@ async fn real_time(
     info!("get ready for real time loop");
     let mut running = false;
     let mut end = 7;
-    let mut time_id = 0;
+    let mut time_id = 24;
 
     // 每个品种的上一个trade_id
     // let mut last_trade_ids: HashMap<String, u64> = HashMap::new();
