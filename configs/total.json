@@ -80,7 +80,11 @@
         "BTCUSDT",
         "BTCBUSD",
         "ETHUSDT",
-        "ETHBUSD"
+        "ETHBUSD",
+        "BNBUSDT",
+        "BNBBUSD",
+        "XRPUSDT",
+        "XRPBUSD"
     ],
     "Starts": [
         7,
