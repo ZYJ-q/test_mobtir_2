@@ -125,8 +125,8 @@ async fn real_time(
                 &f_config.secret_key,
             );
             let name = f_config.tra_id;
-            // info!("waiting for next real time task...({}) {}", 3000 * 10, name);
-            // tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
+            info!("waiting for next real time task...({}) {}", 3000 * 10, name);
+            tokio::time::delay_for(Duration::from_millis(300 * 10)).await;
             for symbol_v in symbols {
                 let mut trade_histories: VecDeque<Value> = VecDeque::new();
                 let symbol = symbol_v.as_str().unwrap();
