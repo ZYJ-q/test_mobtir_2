@@ -125,13 +125,14 @@ async fn real_time(
                 &f_config.secret_key,
             );
             let name = f_config.tra_id;
-            info!("waiting for next real time task...({}) {}", 3000 * 10, name);
-            tokio::time::delay_for(Duration::from_millis(3000 * 10)).await;
+            
             for symbol_v in symbols {
                 let mut trade_histories: VecDeque<Value> = VecDeque::new();
                 let symbol = symbol_v.as_str().unwrap();
                 let symbol = format!("{}", symbol);
                 // println!("symbol{}", symbol);
+                info!("waiting for next real time task...({}) {}", 3000 * 10, name);
+            tokio::time::delay_for(Duration::from_millis(3000 * 10)).await;
                 
                 if let Some(data) = binance_futures_api.trade_hiostory(&symbol, &end, &time_id).await {
                     let v: Value = serde_json::from_str(&data).unwrap();
